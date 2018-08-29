@@ -1,4 +1,4 @@
-package com.onlinecourse.course;
+package com.course.online;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
