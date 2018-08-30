@@ -11,37 +11,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-enum UserStatus {
-	ACTIVE, INACTIVE;
-}
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table
 public class Member {
 
 	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column
+	@Column(name="username")
 	private String userName;
 
-	@Column
+	@Column(name="password")
 	private String password;
 
-	@Column
+	@Column(name="email")
 	private String email;
 
-	@Column
+	@Column(name="type")
 	private String type;
 
-	@Column
+	@Column(name="createdon")
 	private Date createdOn;
 
 	@Enumerated(EnumType.STRING)
-	@Column
-	private UserStatus status;
+	@Column(name="status")
+	private MemberStatus status;
 
 	public Date getCreatedOn() {
 		return createdOn;
@@ -91,11 +89,11 @@ public class Member {
 		this.type = userType;
 	}
 
-	public UserStatus getStatus() {
+	public MemberStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(UserStatus status) {
+	public void setStatus(MemberStatus status) {
 		this.status = status;
 	}
 

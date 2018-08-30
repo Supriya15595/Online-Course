@@ -3,8 +3,11 @@ package com.course.online.service;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,8 +36,17 @@ public class MemberServiceUT {
 	@Autowired
 	private MemberService memberService;
 	
+	private Member getMemberTest() {
+		Member member = new Member();
+		member.setId(10);
+		member.setUserName("abc");
+		member.setPassword("abc123");
+		member.setEmail("abc@gmail.com");
+		return member;
+	}
+	
 	@Test
-	public void testaddMemberMethod() {
+	public void testAddMemberMethod() {
 		Member member = new Member();
 		member.setUserName("abc");
 		member.setPassword("abc123");
@@ -43,12 +55,13 @@ public class MemberServiceUT {
 		Member addMember = memberService.addMember(member);
 		assertNotNull(addMember.getId());
 	}
-	private Member getMemberTest() {
-		Member member = new Member();
-		member.setUserName("abc");
-		member.setPassword("abc123");
-		member.setEmail("abc@gmail.com");
-		member.setId(10);
-		return member;
+	
+	@Test
+	public void testFindMember()
+	{
+		when(memberDao.findById(Mockito.anyInt()).get()).thenReturn(getMemberTest());
+		Member member = memberService.findMember(Mockito.anyInt());
+		assertNotNull(member.getUserName());
 	}
+	
 }
