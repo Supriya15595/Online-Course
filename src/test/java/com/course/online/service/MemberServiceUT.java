@@ -1,5 +1,7 @@
 package com.course.online.service;
 
+
+
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -59,7 +61,7 @@ public class MemberServiceUT {
 	@Test
 	public void testFindMember()
 	{
-		when(memberDao.findById(Mockito.anyInt()).get()).thenReturn(getMemberTest());
+		when(memberDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getMemberTest()));
 		Member member = memberService.findMember(Mockito.anyInt());
 		assertNotNull(member.getUserName());
 	}

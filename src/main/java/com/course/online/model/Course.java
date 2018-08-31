@@ -14,37 +14,36 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-enum CourseStatus {
-	New, Active, Terminated
-}
+import com.course.online.util.CourseStatus;
+
 
 @Entity
 @Table
 public class Course {
 
 	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column
+	@Column(name="NAME")
 	private String name;
 
-	@Column
+	@Column(name="language")
 	private String language;
 
-	@Column
+	@Column(name="ratings")
 	private int ratings;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "memberid")
+	@JoinColumn(name = " MEMBERID")
 	private Member member;
 
 	@Enumerated(EnumType.STRING)
-	@Column
+	@Column(name="STATUS")
 	private CourseStatus status;
 
-	@Column
+	@Column(name="createdon")
 	private Date createdOn;
 
 	public CourseStatus getStatus() {
@@ -63,11 +62,11 @@ public class Course {
 		this.createdOn = createdOn;
 	}
 
-	public Member getUser() {
+	public Member getMember() {
 		return member;
 	}
 
-	public void setUser(Member user) {
+	public void setMember(Member user) {
 		this.member = user;
 	}
 
@@ -75,7 +74,7 @@ public class Course {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

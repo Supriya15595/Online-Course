@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.course.online.util.MemberStatus;
+
 @Entity
 @Table
 public class Member {

@@ -30,7 +30,7 @@ public class MemberController {
 		return MemberBuilder.convert(member);
 	}
 	
-	@DeleteMapping("/deleteMember/{id}")
+	@PostMapping("/deleteMember/{id}")
 	public @ResponseBody MemberDto deleteMember(@PathVariable int id)
 	{
 		Member member =  memberService.deleteMember(id);

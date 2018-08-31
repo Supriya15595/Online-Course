@@ -57,7 +57,7 @@ public class MemberControllerUT {
 	public void testDeleteMemberMethodReturnsJsonObject() throws Exception
 	{
 		when(memberService.deleteMember(Mockito.anyInt())).thenReturn(getAddedMember());
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/deleteMember/100");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/deleteMember/100");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals("{\"id\":100,\"userName\":\"aaa1@gmail\",\"password\":\"letmein1\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null}", result.getResponse().getContentAsString());
 	}

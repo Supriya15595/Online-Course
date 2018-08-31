@@ -1,4 +1,4 @@
-package com.course.online.model;
+package com.course.online.util;
 
 public enum MemberStatus {
 	Active, Inactive;

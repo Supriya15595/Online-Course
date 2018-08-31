@@ -2,7 +2,7 @@ package com.course.online.dto;
 
 import java.util.Date;
 
-import com.course.online.model.MemberStatus;
+import com.course.online.util.MemberStatus;
 
 public class MemberDto {
 
