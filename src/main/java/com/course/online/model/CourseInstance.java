@@ -14,41 +14,40 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-enum InstanceStatus {
-	Active, InProgress, Terminated
-}
+import com.course.online.util.CourseInstanceStatus;
+
 
 @Entity
-@Table
+@Table(name="courseinstance")
 public class CourseInstance {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
+	@Column(name="id")
 	private Integer id;
 
-	@Column
+	@Column(name="startdate")
 	private Date startdate;
 
-	@Column
+	@Column(name="enddate")
 	private Date endDate;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "courseId")
+	@JoinColumn(name = "courseid")
 	private Course course;
 
-	@Column
+	@Column(name="createdon")
 	private Date createdOn;
 
 	@Enumerated(EnumType.STRING)
-	@Column
-	private InstanceStatus status;
+	@Column(name="STATUS")
+	private CourseInstanceStatus status;
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -84,11 +83,11 @@ public class CourseInstance {
 		this.createdOn = createdOn;
 	}
 
-	public InstanceStatus getStatus() {
+	public CourseInstanceStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(InstanceStatus status) {
+	public void setStatus(CourseInstanceStatus status) {
 		this.status = status;
 	}
 }
