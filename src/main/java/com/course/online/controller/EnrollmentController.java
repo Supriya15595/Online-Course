@@ -1,5 +1,7 @@
 package com.course.online.controller;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,5 +78,13 @@ public class EnrollmentController {
 		Iterable<EnrollmentDto> enrolledDtoList = EnrollmentBuilder.convert(enrollmentList);
 		
 		return enrolledDtoList;
+	}
+	
+	@GetMapping("/enrollment/member/{memberId}")
+	public @ResponseBody Iterable<EnrollmentDto> findEnrolledMemberByMemberId(@PathVariable Integer memberId)
+	{
+		Iterable<Enrollment> enrollmentList = enrollmentService.findEnrolledMemberByMemberId(memberId);
+		
+		return EnrollmentBuilder.convert(enrollmentList);
 	}
 }

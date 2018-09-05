@@ -85,6 +85,17 @@ public class EnrollmentControllerUT {
 		
 		assertEquals("[{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null},{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}]", result.getResponse().getContentAsString());
 	}
+	
+	@Test
+	public void testFindEnrolledMemberByMemberIdWillReturnMultipleJsonValue() throws Exception
+	{
+		when(enrollmentService.findEnrolledMemberByMemberId(Mockito.anyInt())).thenReturn(getListOfEnrolledMembers());
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/member/1");
+		MvcResult result = mvc.perform(requestBuilder).andReturn();
+		
+		assertEquals("[{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null},{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}]", result.getResponse().getContentAsString());
+	}
 
 	private Iterable<Enrollment> getListOfEnrolledMembers() {
 		List<Enrollment> enrollmentList = new ArrayList<Enrollment>();

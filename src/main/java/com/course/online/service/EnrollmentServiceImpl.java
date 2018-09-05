@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.course.online.dao.EnrollmentDao;
 import com.course.online.model.Enrollment;
 
 @Component
@@ -32,6 +33,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	@Override
 	public Iterable<Enrollment> listOfEnrolledMembers() {
 		Iterable<Enrollment> enrollmentList = enrollmentDao.findAll();
+		return enrollmentList;
+	}
+
+	@Override
+	public Iterable<Enrollment> findEnrolledMemberByMemberId(Integer memberId) {
+		Iterable<Enrollment> enrollmentList = enrollmentDao.findByMemberId(memberId);
 		return enrollmentList;
 	}
 

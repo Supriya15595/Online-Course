@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.course.online.dao.EnrollmentDao;
 import com.course.online.model.Enrollment;
 import com.course.online.model.Member;
 
@@ -62,6 +63,18 @@ public class EnrollmentServiceUT {
 		when(enrollmentDao.findAll()).thenReturn(getListOfEnrolledMembers());
 		
 		Iterable<Enrollment> enrollmentList = enrollmentService.listOfEnrolledMembers();
+		
+		for (Enrollment enrollment : enrollmentList) {
+			assertNotNull(enrollment.getId());
+		}
+	}
+	
+	@Test
+	public void testFindEnrolledMemberByMemberIdWillReturnMultipleJsonValue()
+	{
+		when(enrollmentDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getEnrollmentObject()));
+		
+		Iterable<Enrollment> enrollmentList = enrollmentService.findEnrolledMemberByMemberId(Mockito.anyInt());
 		
 		for (Enrollment enrollment : enrollmentList) {
 			assertNotNull(enrollment.getId());

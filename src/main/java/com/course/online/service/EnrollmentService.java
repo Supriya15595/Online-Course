@@ -12,4 +12,6 @@ public interface EnrollmentService {
 	public Enrollment findEnrolledMember(Integer id);
 
 	public Iterable<Enrollment> listOfEnrolledMembers();
+
+	public Iterable<Enrollment> findEnrolledMemberByMemberId(Integer memberId);
 }
