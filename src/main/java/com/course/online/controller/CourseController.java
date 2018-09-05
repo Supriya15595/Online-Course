@@ -24,12 +24,13 @@ public class CourseController {
 	@Autowired
 	MemberService memberService;
 
-	@PostMapping("/addCourse/{memberId}")
-	public @ResponseBody CourseDto addCourse(@PathVariable int memberId, @RequestBody CourseDto courseDto) {
+	@PostMapping("/course")
+	public @ResponseBody CourseDto addCourse(@RequestBody CourseDto courseDto) {
 		// Converting courseDto to entity
 		Course course = CourseBuilder.convert(courseDto);
 
 		// Adding the member to course
+		Integer memberId = courseDto.getMemberId();
 		Member member = memberService.findMember(memberId);
 		course.setMember(member);
 
@@ -42,7 +43,7 @@ public class CourseController {
 		return courseDto;
 	}
 
-	@GetMapping("/findCourse/{id}")
+	@GetMapping("/course/{id}")
 	public @ResponseBody CourseDto findCourseById(@PathVariable int id) {
 		
 		// Searching for course by id
@@ -55,8 +56,8 @@ public class CourseController {
 
 	}
 	
-	@GetMapping("/findAllCourses")
-	public @ResponseBody Iterable<CourseDto> findAllCourses() {
+	@GetMapping("/course/list")
+	public @ResponseBody Iterable<CourseDto> listOfCourse() {
 		
 		//Getting all courses from dao
 		Iterable<Course> listOfCourses = courseService.findAllCourses();

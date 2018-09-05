@@ -45,7 +45,7 @@ public class MemberControllerUT {
 	@Test
 	public void testAddMemberMethodReturnsJsonObject() throws Exception {
 		when(memberService.addMember(Mockito.any())).thenReturn(getAddedMember());
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/addMember") .accept(MediaType.APPLICATION_JSON).content("{\n" +
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/member") .accept(MediaType.APPLICATION_JSON).content("{\n" +
                 "\t\"username\":\"aaa1@gmail\",\n" +
                 "\t\"password\":\"letmein1\"\n" +
                 "}").contentType(MediaType.APPLICATION_JSON);
@@ -57,7 +57,7 @@ public class MemberControllerUT {
 	public void testDeleteMemberMethodReturnsJsonObject() throws Exception
 	{
 		when(memberService.deleteMember(Mockito.anyInt())).thenReturn(getAddedMember());
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/deleteMember/100");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/member/delete/100");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals("{\"id\":100,\"userName\":\"aaa1@gmail\",\"password\":\"letmein1\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null}", result.getResponse().getContentAsString());
 	}
@@ -66,16 +66,16 @@ public class MemberControllerUT {
 	public void testFindMemberMethodReturnsJsonObject() throws Exception
 	{
 		when(memberService.findMember(Mockito.anyInt())).thenReturn(getAddedMember());
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findMember/100");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/member/100");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals("{\"id\":100,\"userName\":\"aaa1@gmail\",\"password\":\"letmein1\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null}", result.getResponse().getContentAsString());
 	}
 	
 	@Test
-	public void testFindAllMembersMethodResturnsNestedJsonObject() throws Exception
+	public void testListOfMembersWillReturnMultipleJsonObject() throws Exception
 	{
 		when(memberService.findAllMembers()).thenReturn(getListofMembers());
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findAllMembers");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/member/list");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals("[{\"id\":1,\"userName\":\"aaa@gmail\",\"password\":\"aaa123\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null},{\"id\":2,\"userName\":\"xxx@gmail\",\"password\":\"xxx123\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null}]", result.getResponse().getContentAsString());
 	}

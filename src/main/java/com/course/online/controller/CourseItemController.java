@@ -26,14 +26,14 @@ public class CourseItemController {
 	@Autowired
 	CourseService courseService;
 
-	@PostMapping("/addCourseItem/{courseId}")
-	public @ResponseBody CourseItemDto addCourseItem(@PathVariable int courseId,
-			@RequestBody CourseItemDto courseItemDto) {
+	@PostMapping("/courseItem")
+	public @ResponseBody CourseItemDto addCourseItem(@RequestBody CourseItemDto courseItemDto) {
 		
 		// Convert CourseItemDto to CourseItemEntity
 		CourseItem courseItem = CourseItemBuilder.convert(courseItemDto);
 
 		// Find the course with specified id
+		Integer courseId = courseItemDto.getCourseId();
 		Course course = courseService.findCourseById(courseId);
 		courseItem.setCourse(course);
 
@@ -45,7 +45,7 @@ public class CourseItemController {
 		return courseItemDto;
 	}
 	
-	@GetMapping("/findCourseItem/{courseItemId}")
+	@GetMapping("/courseItem/{courseItemId}")
 	public @ResponseBody CourseItemDto findCourseItem(@PathVariable int courseItemId)
 	{
 		CourseItem courseItem = courseItemService.findCourseItem(courseItemId);
@@ -56,8 +56,8 @@ public class CourseItemController {
 		return courseItemDto;
 	}
 	
-	@GetMapping("/courseItem/all")
-	public @ResponseBody Iterable<CourseItemDto> findAllCourseItems()
+	@GetMapping("/courseItem/list")
+	public @ResponseBody Iterable<CourseItemDto> listOfCourseItem()
 	{
 		Iterable<CourseItem> listOfCourseItem = courseItemService.findAllCourseItems();
 		

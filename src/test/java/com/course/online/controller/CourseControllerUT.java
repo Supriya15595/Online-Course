@@ -68,7 +68,7 @@ public class CourseControllerUT {
 		when(courseService.addCourse(Mockito.any())).thenReturn(course);
 
 		// Mocking the request
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/addCourse/10").accept(MediaType.APPLICATION_JSON).content("{\n" +
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/course").accept(MediaType.APPLICATION_JSON).content("{\n" +
                 "\t\"id\":\"10\",\n" +
                 "\t\"name\":\"java\",\n" +
                 "\t\"language\":\"English\",\n" +
@@ -77,7 +77,7 @@ public class CourseControllerUT {
 		
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
-		assertEquals("{\"id\":10,\"name\":\"java\",\"language\":\"English\",\"ratings\":5,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null}", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":10,\"name\":\"java\",\"language\":\"English\",\"ratings\":5,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null,\"memberId\":null}", result.getResponse().getContentAsString());
 
 	}
 	
@@ -86,20 +86,20 @@ public class CourseControllerUT {
 	{
 		when(courseService.findCourseById(Mockito.anyInt())).thenReturn(getAddedCourse());
 		
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findCourse/10");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/course/10");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
-		assertEquals("{\"id\":10,\"name\":\"java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null}", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":10,\"name\":\"java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null,\"memberId\":null}", result.getResponse().getContentAsString());
 		
 	}
 	
 	@Test
-	public void testFinAllCourses() throws Exception
+	public void testListOfCourseMethodWillReturnMultipleJsonValue() throws Exception
 	{
 		when(courseService.findAllCourses()).thenReturn(getListOfCourses());
 		
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findAllCourses");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/course/list");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
-		assertEquals("[{\"id\":1,\"name\":\"Java\",\"language\":null,\"ratings\":0,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null},{\"id\":2,\"name\":\"J2ee\",\"language\":null,\"ratings\":0,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null}]", result.getResponse().getContentAsString());
+		assertEquals("[{\"id\":1,\"name\":\"Java\",\"language\":null,\"ratings\":0,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null,\"memberId\":null},{\"id\":2,\"name\":\"J2ee\",\"language\":null,\"ratings\":0,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null,\"memberId\":null}]", result.getResponse().getContentAsString());
 	}
 
 	private Iterable<Course> getListOfCourses() {

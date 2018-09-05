@@ -13,6 +13,15 @@ public class CourseItemDto {
 	private String content;
 	private Course course;
 	private Date createdOn;
+	private Integer courseId;
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
 
 	public Integer getId() {
 		return id;

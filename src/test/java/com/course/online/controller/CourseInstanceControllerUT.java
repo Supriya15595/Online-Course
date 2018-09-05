@@ -48,31 +48,44 @@ public class CourseInstanceControllerUT {
 
 		when(courseInstanceService.addCourseInstance(Mockito.any())).thenReturn(getCourseInstanceObject());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/courseInstance/1")
-				.accept(MediaType.APPLICATION_JSON)
-				.content("{\n" + "\t\"id\":\"1\",\n" + "\t\"status\":\"Active\"\n" + "}")
-				.contentType(MediaType.APPLICATION_JSON);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/courseInstance").accept(MediaType.APPLICATION_JSON).content("{\n" +
+                "\t\"id\":\"1\",\n" +
+                "\t\"courseId\":\"1\",\n" +
+                "\t\"status\":\"Active\"\n" +
+                "}").contentType(MediaType.APPLICATION_JSON);
 
 		// Testing if method present in courseInstanceService was invoked atleast once
-		// verify(courseInstanceService).addCourseInstance(Mockito.any());
+//		 verify(courseInstanceService).addCourseInstance(Mockito.any());
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
-		assertEquals("", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null,\"status\":\"Active\",\"courseId\":null}", result.getResponse().getContentAsString());
 	}
 
 	@Test
-	public void testListAllCourseInstanceMethodWillReturnMutipleJsonValues() throws Exception {
+	public void testFindCourseInstanceMethodWillReturnJsonValue() throws Exception
+	{
+		when(courseInstanceService.findCourseInstanceById(Mockito.anyInt())).thenReturn(getCourseInstanceObject());
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseInstance/1");
+		
+		MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
+		
+		assertEquals("{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null,\"status\":\"Active\",\"courseId\":null}", mvcResult.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testListOfCourseInstanceMethodWillReturnMutipleJsonValues() throws Exception {
 		when(courseInstanceService.listOfCourseInstances()).thenReturn(getListOfCourseInstnce());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseInstance/all");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseInstance/list");
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		
 		verify(courseInstanceService).listOfCourseInstances();
 
 		assertEquals(
-				"[{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},{\"id\":2,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Terminated\"}]",
+				"[{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\",\"courseId\":null},{\"id\":2,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Terminated\",\"courseId\":null}]",
 				result.getResponse().getContentAsString());
 	}
 
@@ -101,7 +114,7 @@ public class CourseInstanceControllerUT {
 		courseInstance.setId(1);
 		courseInstance.setStatus(CourseInstanceStatus.Active);
 		courseInstance.setCourse(getCourseObject());
-		return null;
+		return courseInstance;
 	}
 
 	private Course getCourseObject() {

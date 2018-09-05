@@ -48,15 +48,17 @@ public class CourseItemControllerUT {
 		when(courseItemService.addCourseItem(Mockito.any())).thenReturn(getCourseItemObject());
 
 		// Mocking the request
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/addCourseItem/1")
-				.accept(MediaType.APPLICATION_JSON)
-				.content("{\n" + "\t\"id\":\"1\",\n" + "\t\"name\":\"Introduction to Hibernate\",\n"
-						+ "\t\"description\":\"Why Hibernate?\",\n" + "\t\"type\":\"video\"\n" + "}")
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/courseItem").accept(MediaType.APPLICATION_JSON).content("{\n" + 
+						"\t\"id\":\"1\",\n" + 
+						"\t\"name\":\"Introduction to Hibernate\",\n"+
+						"\t\"courseId\":\"1\",\n"+
+						"\t\"type\":\"video\"\n" + 
+						"}")
 				.contentType(MediaType.APPLICATION_JSON);
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
-		assertEquals("{\"id\":1,\"name\":\"Introduction to java\",\"description\":null,\"type\":null,\"content\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null}", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":1,\"name\":\"Introduction to java\",\"description\":null,\"type\":\"video\",\"content\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null,\"courseId\":null}", result.getResponse().getContentAsString());
 
 	}
 	
@@ -65,23 +67,23 @@ public class CourseItemControllerUT {
 	{
 		when(courseItemService.findCourseItem(Mockito.anyInt())).thenReturn(getCourseItemObject());
 		
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/findCourseItem/1");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/1");
 		
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		
-		assertEquals("{\"id\":1,\"name\":\"Introduction to java\",\"description\":null,\"type\":null,\"content\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null}", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":1,\"name\":\"Introduction to java\",\"description\":null,\"type\":\"video\",\"content\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null,\"courseId\":null}", result.getResponse().getContentAsString());
 	}
 	
 	@Test
-	public void testFindAllCoursesMethodWillReturnMultipleJsonObjects() throws Exception 
+	public void testListOfCourseItemMethodWillReturnMultipleJsonObjects() throws Exception 
 	{
 		when(courseItemService.findAllCourseItems()).thenReturn(getListOfCourseItems());
 		
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/all");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/list");
 		
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		
-		assertEquals("[{\"id\":1,\"name\":\"Introduction to Java\",\"description\":null,\"type\":\"video\",\"content\":null,\"course\":null,\"createdOn\":null},{\"id\":2,\"name\":\"Introduction to JDBC\",\"description\":null,\"type\":\"pdf\",\"content\":null,\"course\":null,\"createdOn\":null}]", result.getResponse().getContentAsString());
+		assertEquals("[{\"id\":1,\"name\":\"Introduction to Java\",\"description\":null,\"type\":\"video\",\"content\":null,\"course\":null,\"createdOn\":null,\"courseId\":null},{\"id\":2,\"name\":\"Introduction to JDBC\",\"description\":null,\"type\":\"pdf\",\"content\":null,\"course\":null,\"createdOn\":null,\"courseId\":null}]", result.getResponse().getContentAsString());
 	}
 
 	private Iterable<CourseItem> getListOfCourseItems() {
@@ -110,7 +112,9 @@ List<CourseItem> courseItemList = new ArrayList<CourseItem>();
 
 		courseItem.setId(1);
 		courseItem.setName("Introduction to java");
+		courseItem.setType("video");
 		courseItem.setCourse(getCourseObject());
+		
 		return courseItem;
 	}
 
@@ -121,6 +125,7 @@ List<CourseItem> courseItemList = new ArrayList<CourseItem>();
 		course.setId(1);
 		course.setLanguage("English");
 		course.setName("Java");
+		
 		return course;
 	}
 

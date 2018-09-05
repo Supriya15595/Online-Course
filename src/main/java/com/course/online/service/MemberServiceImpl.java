@@ -1,10 +1,13 @@
 package com.course.online.service;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.course.online.dao.MemberDao;
 import com.course.online.model.Member;
+import com.course.online.util.MemberStatus;
 
 @Component
 public class MemberServiceImpl implements MemberService {
@@ -14,6 +17,13 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public Member addMember(Member member) {
+		//Setting the currentDate attribute to present date
+		Date currentDate = new Date();
+		member.setCreatedOn(currentDate);
+		
+		//Setting the status attribute to active(default)
+		member.setStatus(MemberStatus.Active);
+		
 		member = memberDao.save(member);
 		return member;
 	}

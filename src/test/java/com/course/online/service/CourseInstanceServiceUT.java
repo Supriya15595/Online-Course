@@ -1,10 +1,12 @@
 package com.course.online.service;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +58,18 @@ public class CourseInstanceServiceUT {
 		for (CourseInstance courseInstance : listofCourseInstance) {
 			assertNotNull(courseInstance.getId());
 		}
+	}
+	
+	@Test
+	public void testFindCourseInstanceByIdMethodWillReturnASingleJsonValue()
+	{
+		when(courseInstanceDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getCourseInstanceObject()));
+		
+		CourseInstance courseInstance = courseInstanceService.findCourseInstanceById(Mockito.anyInt());
+		
+		verify(courseInstanceDao).findById(Mockito.anyInt());
+		
+		assertNotNull(courseInstance.getId());
 	}
 
 	private Iterable<CourseInstance> getListOfCourseInstnce() {

@@ -22,7 +22,7 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 	
-	@PostMapping("/addMember")
+	@PostMapping("/member")
 	public @ResponseBody MemberDto addMember(@RequestBody MemberDto memberDto)
 	{
 		Member member = MemberBuilder.convert(memberDto);
@@ -30,7 +30,7 @@ public class MemberController {
 		return MemberBuilder.convert(member);
 	}
 	
-	@PostMapping("/deleteMember/{id}")
+	@PostMapping("/member/delete/{id}")
 	public @ResponseBody MemberDto deleteMember(@PathVariable int id)
 	{
 		Member member =  memberService.deleteMember(id);
@@ -38,7 +38,7 @@ public class MemberController {
 		return memberDto;
 	}
 	
-	@GetMapping("/findMember/{id}")
+	@GetMapping("/member/{id}")
 	public @ResponseBody MemberDto findMember(@PathVariable int id)
 	{
 		Member member = memberService.findMember(id);
@@ -46,8 +46,8 @@ public class MemberController {
 		return memeberDto;
 	}
 	
-	@GetMapping("/findAllMembers")
-	public @ResponseBody List<MemberDto> findAllMembers()
+	@GetMapping("/member/list")
+	public @ResponseBody List<MemberDto> listOfMembers()
 	{
 		List<MemberDto> memberDtoList = MemberBuilder.convert(memberService.findAllMembers());
 		return memberDtoList;

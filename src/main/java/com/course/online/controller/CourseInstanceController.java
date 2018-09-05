@@ -25,17 +25,17 @@ public class CourseInstanceController {
 	@Autowired
 	private CourseService courseService;
 	
-	@PostMapping("/courseInstance/{courseId}")
-	public @ResponseBody CourseInstanceDto addCourseInstance(@PathVariable Integer courseId,@RequestBody CourseInstanceDto courseInstanceDto)
+	@PostMapping("/courseInstance")
+	public @ResponseBody CourseInstanceDto addCourseInstance(@RequestBody CourseInstanceDto courseInstanceDto)
 	{
 		//Finding the Course Object to be mapped with CourseInstance
+		Integer courseId = courseInstanceDto.getCourseId();
 		Course course = courseService.findCourseById(courseId);
 		
 		//Converting the CourseInstanceDto to CourseInstance Entity
 		CourseInstance courseInstance = CourseInstanceBuilder.convert(courseInstanceDto);
 		
 		courseInstance.setCourse(course);
-		courseInstance.setStatus(CourseInstanceStatus.Active);
 			
 		courseInstance = courseInstanceService.addCourseInstance(courseInstance);
 		
@@ -46,8 +46,19 @@ public class CourseInstanceController {
 		
 	}
 	
-	@GetMapping("/courseInstance/all")
-	public @ResponseBody Iterable<CourseInstanceDto> listAllCourseInstance()
+	@GetMapping("/courseInstance/{courseInstanceId}")
+	public @ResponseBody CourseInstanceDto findCourseInstance(@PathVariable Integer courseInstanceId)
+	{
+		CourseInstance courseInstance = courseInstanceService.findCourseInstanceById(courseInstanceId);
+		
+		//Convert courseInstance Entity to courseInstanceIdDto
+		CourseInstanceDto courseInstanceDto = CourseInstanceBuilder.convert(courseInstance);
+		
+		return courseInstanceDto;
+	}
+	
+	@GetMapping("/courseInstance/list")
+	public @ResponseBody Iterable<CourseInstanceDto> listOfCourseInstance()
 	{
 		Iterable<CourseInstance> listOfCourseInstance = courseInstanceService.listOfCourseInstances();
 		

@@ -8,4 +8,6 @@ public interface CourseInstanceService {
 
 	public Iterable<CourseInstance> listOfCourseInstances();
 
+	public CourseInstance findCourseInstanceById(int id);
+
 }

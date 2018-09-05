@@ -1,5 +1,7 @@
 package com.course.online.service;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,17 +13,18 @@ public class CourseItemServiceImpl implements CourseItemService {
 
 	@Autowired
 	CourseItemDao courseItemDao;
-	
+
 	@Override
 	public CourseItem addCourseItem(CourseItem courseItem) {
-		
-		 courseItem = courseItemDao.save(courseItem);
-		 return courseItem;
+		Date currentDate = new Date();
+		courseItem.setCreatedOn(currentDate);
+		courseItem = courseItemDao.save(courseItem);
+		return courseItem;
 	}
 
 	@Override
 	public CourseItem findCourseItem(Integer id) {
-		
+
 		CourseItem courseItem = courseItemDao.findById(id).get();
 		return courseItem;
 	}
