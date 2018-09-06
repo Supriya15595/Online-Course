@@ -12,4 +12,8 @@ public interface CourseService {
 	public Course findCourseById(int id);
 	
 	public Iterable<Course> findAllCourses();
+	
+	public Course deleteCourse(Integer id);
+	
+	public Course updateStatusToActive(Integer id);
 }

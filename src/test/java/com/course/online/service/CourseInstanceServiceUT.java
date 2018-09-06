@@ -49,7 +49,7 @@ public class CourseInstanceServiceUT {
 	}
 	
 	@Test
-	public void testListAllCourseInstanceMethodWillReturnMultipleJsonValues()
+	public void testListAllCourseInstanceMethodWillReturnListOfCourseInstance()
 	{
 		when(courseInstanceDao.findAll()).thenReturn(getListOfCourseInstnce());
 		
@@ -71,7 +71,28 @@ public class CourseInstanceServiceUT {
 		
 		assertNotNull(courseInstance.getId());
 	}
-
+	
+	@Test
+	public void testDeleteCourseInstanceWillUpdateStatusToTerminatedAndReturnsJsonValue() {
+		when(courseInstanceDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getCourseInstanceObject()));
+		
+		CourseInstance courseInstance =courseInstanceService.deleteCourseInstance(Mockito.anyInt());
+		
+		assertEquals("Terminated", courseInstance.getStatus().toString());
+	}
+	
+	@Test
+	public void testFindCourseInstancesOfCourseWillReturnListOfCourseInstance()
+	{
+		when(courseInstanceDao.findByCourseId(Mockito.anyInt())).thenReturn(getListOfCourseInstnce());
+		
+		Iterable<CourseInstance> courseInstanceList = courseInstanceService.findCourseInstancesOfCourse(Mockito.anyInt());
+		
+		for (CourseInstance courseInstance : courseInstanceList) {
+			assertNotNull(courseInstance.getId());
+		}
+	}
+	
 	private Iterable<CourseInstance> getListOfCourseInstnce() {
 
 		List<CourseInstance> courseInstanceList = new ArrayList<CourseInstance>();

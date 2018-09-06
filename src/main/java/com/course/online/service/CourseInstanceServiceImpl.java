@@ -36,4 +36,25 @@ public class CourseInstanceServiceImpl implements CourseInstanceService {
 		return courseInstance;
 	}
 
+	@Override
+	public CourseInstance deleteCourseInstance(int id) {
+		
+		CourseInstance courseInstance = courseInstanceDao.findById(id).get();
+		
+		courseInstance.setStatus(CourseInstanceStatus.Terminated);
+		
+		courseInstanceDao.save(courseInstance);
+		
+		return courseInstance;
+	}
+
+	@Override
+	public Iterable<CourseInstance> findCourseInstancesOfCourse(int courseId) {
+
+		Iterable<CourseInstance> courseInstanceList = courseInstanceDao.findByCourseId(courseId);
+		
+		return courseInstanceList;
+	}
+	
+
 }

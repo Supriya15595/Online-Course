@@ -75,6 +75,18 @@ public class CourseItemServiceUT {
 			assertNotNull(courseItem.getId());
 		}
 	}
+	
+	@Test
+	public void testListCourseItemsOfCourseWillReturnListOfCourseItems()
+	{
+		when(courseItemDao.findByCourseId(Mockito.anyInt())).thenReturn(getListOfCourseItems());
+		
+		Iterable<CourseItem> courseItemList = courseItemService.listCourseItemsOfCourse(Mockito.anyInt());
+		
+		for (CourseItem courseItem : courseItemList) {
+			assertNotNull(courseItem.getId());
+		}
+	}
 
 	private Iterable<CourseItem> getListOfCourseItems() {
 		

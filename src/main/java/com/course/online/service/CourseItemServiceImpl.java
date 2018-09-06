@@ -36,4 +36,11 @@ public class CourseItemServiceImpl implements CourseItemService {
 		return courseItemsList;
 	}
 
+	@Override
+	public Iterable<CourseItem> listCourseItemsOfCourse(Integer courseId) {
+		
+		Iterable<CourseItem> courseItemList = courseItemDao.findByCourseId(courseId);
+		return courseItemList;
+	}
+
 }

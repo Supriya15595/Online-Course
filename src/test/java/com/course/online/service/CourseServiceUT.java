@@ -1,5 +1,6 @@
 package com.course.online.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +18,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.course.online.dao.CourseDao;
+import com.course.online.dao.CourseInstanceDao;
 import com.course.online.model.Course;
+import com.course.online.model.CourseInstance;
+import com.course.online.util.CourseInstanceStatus;
 
 @RunWith(SpringRunner.class)
 public class CourseServiceUT {
@@ -36,16 +40,13 @@ public class CourseServiceUT {
 
 	@MockBean
 	CourseDao courseDao;
+	
+	@MockBean
+	CourseInstanceService courseInstanceService;
+	
+	@MockBean
+	CourseInstanceDao courseInstanceDao; 
 
-	private Course getCourseObject() {
-
-		Course course = new Course();
-		course.setId(1);
-		course.setName("java");
-		course.setRatings(5);
-
-		return course;
-	}
 
 	@Test
 	public void testAddCourseMethodWillReturnCourseObject() {
@@ -73,12 +74,44 @@ public class CourseServiceUT {
 	}
 
 	@Test
-	public void testFindAllCourses() {
+	public void testFindAllCoursesWillReturnListOfCourses() {
 		when(courseDao.findAll()).thenReturn(getListOfCourses());
 		Iterable<Course> listOfCourses = courseService.findAllCourses();
 		for (Course course : listOfCourses) {
 			assertNotNull(course.getId());
 		}
+	}
+	
+	@Test
+	public void testDeleteCourseMethodWillUpdateStatusOfCourseAndCourseInstanceToTerminated()
+	{
+		when(courseDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getCourseObject()));
+		
+		when(courseInstanceService.findCourseInstancesOfCourse(Mockito.anyInt())).thenReturn(getListOfCourseInstnce());
+		
+		Course course = courseService.deleteCourse(Mockito.anyInt());
+		
+		assertEquals("Terminated", course.getStatus().toString());
+	}
+	
+	@Test
+	public void testUpdateStatusToActiveMethodWillReturnCourseObject()
+	{
+		when(courseDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getCourseObject()));
+		
+		Course course = courseService.updateStatusToActive(Mockito.anyInt());
+		
+		assertEquals("Active", course.getStatus().toString());
+	}
+	
+	private Course getCourseObject() {
+
+		Course course = new Course();
+		course.setId(1);
+		course.setName("java");
+		course.setRatings(5);
+
+		return course;
 	}
 
 	private Iterable<Course> getListOfCourses() {
@@ -99,5 +132,24 @@ public class CourseServiceUT {
 		listOfCourses.add(course2);
 		
 		return listOfCourses;
+	}
+	
+	private Iterable<CourseInstance> getListOfCourseInstnce() {
+
+		List<CourseInstance> courseInstanceList = new ArrayList<CourseInstance>();
+		
+		CourseInstance courseInstance1 = new CourseInstance();
+		courseInstance1.setId(1);
+		courseInstance1.setStatus(CourseInstanceStatus.Active);
+		
+		CourseInstance courseInstance2 = new CourseInstance();
+		courseInstance2.setId(1);
+		courseInstance2.setStatus(CourseInstanceStatus.Active);
+		
+		
+		courseInstanceList.add(courseInstance1);
+		courseInstanceList.add(courseInstance2);
+		
+		return courseInstanceList;
 	}
 }

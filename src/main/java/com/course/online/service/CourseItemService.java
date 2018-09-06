@@ -12,4 +12,6 @@ public interface CourseItemService {
 	public CourseItem findCourseItem(Integer id);
 
 	public Iterable<CourseItem> findAllCourseItems();
+	
+	public Iterable<CourseItem> listCourseItemsOfCourse(Integer courseId);
 }

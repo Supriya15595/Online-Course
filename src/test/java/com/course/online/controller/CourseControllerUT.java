@@ -101,6 +101,26 @@ public class CourseControllerUT {
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals("[{\"id\":1,\"name\":\"Java\",\"language\":null,\"ratings\":0,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null,\"memberId\":null},{\"id\":2,\"name\":\"J2ee\",\"language\":null,\"ratings\":0,\"member\":{\"id\":10,\"userName\":\"aaa\",\"password\":null,\"email\":null,\"type\":\"tutor\",\"createdOn\":null,\"status\":null},\"status\":null,\"createdOn\":null,\"memberId\":null}]", result.getResponse().getContentAsString());
 	}
+	
+	@Test
+	public void testDeleteCourseMethodWillReturnJsonValue() throws Exception
+	{
+		when(courseService.deleteCourse(Mockito.anyInt())).thenReturn(getAddedCourse());
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/course/delete/1");
+		MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
+		assertEquals("{\"id\":10,\"name\":\"java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null,\"memberId\":null}", mvcResult.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testUpdateStatusToActiveWillReturnJsonValue() throws Exception
+	{
+		when(courseService.updateStatusToActive(Mockito.anyInt())).thenReturn(getAddedCourse());
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/course/update/1");
+		MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
+		assertEquals("{\"id\":10,\"name\":\"java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null,\"memberId\":null}", mvcResult.getResponse().getContentAsString());
+	}
 
 	private Iterable<Course> getListOfCourses() {
 		

@@ -28,7 +28,7 @@ public class CourseItemController {
 
 	@PostMapping("/courseItem")
 	public @ResponseBody CourseItemDto addCourseItem(@RequestBody CourseItemDto courseItemDto) {
-		
+
 		// Convert CourseItemDto to CourseItemEntity
 		CourseItem courseItem = CourseItemBuilder.convert(courseItemDto);
 
@@ -44,27 +44,34 @@ public class CourseItemController {
 
 		return courseItemDto;
 	}
-	
+
 	@GetMapping("/courseItem/{courseItemId}")
-	public @ResponseBody CourseItemDto findCourseItem(@PathVariable int courseItemId)
-	{
+	public @ResponseBody CourseItemDto findCourseItem(@PathVariable int courseItemId) {
 		CourseItem courseItem = courseItemService.findCourseItem(courseItemId);
-		
-		//Convert CourseItem entity to CourseItemDto
+
+		// Convert CourseItem entity to CourseItemDto
 		CourseItemDto courseItemDto = CourseItemBuilder.convert(courseItem);
-		
+
 		return courseItemDto;
 	}
-	
+
 	@GetMapping("/courseItem/list")
-	public @ResponseBody Iterable<CourseItemDto> listOfCourseItem()
-	{
+	public @ResponseBody Iterable<CourseItemDto> listOfCourseItem() {
 		Iterable<CourseItem> listOfCourseItem = courseItemService.findAllCourseItems();
-		
-		//Convert list of CourseItem Entity to list of CourseItemDto
-		
+
+		// Convert list of CourseItem Entity to list of CourseItemDto
+
 		List<CourseItemDto> courseItemDtoList = CourseItemBuilder.convert(listOfCourseItem);
-		
+
+		return courseItemDtoList;
+	}
+
+	@GetMapping("/courseItem/course/{courseId}")
+	public @ResponseBody Iterable<CourseItemDto> listCourseItemsOfCourse(@PathVariable Integer courseId) {
+		Iterable<CourseItem> listOfCourseItem = courseItemService.listCourseItemsOfCourse(courseId);
+
+		List<CourseItemDto> courseItemDtoList = CourseItemBuilder.convert(listOfCourseItem);
+
 		return courseItemDtoList;
 	}
 }

@@ -68,5 +68,25 @@ public class CourseController {
 		return listOfCourseDto;
 	}
 	
+	@PostMapping("/course/delete/{id}")
+	public @ResponseBody CourseDto deleteCourse(@PathVariable Integer id)
+	{
+		Course course = courseService.deleteCourse(id);
+		
+		CourseDto courseDto = CourseBuilder.convert(course);
+		
+		return courseDto;
+	}
+	
+	@PostMapping("/course/update/{id}")
+	public @ResponseBody CourseDto updateStatusToActive(@PathVariable Integer id)
+	{
+		Course course = courseService.updateStatusToActive(id);
+		
+		CourseDto courseDto = CourseBuilder.convert(course);
+		
+		return courseDto;
+	}
+	
 	
 }

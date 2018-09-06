@@ -68,4 +68,26 @@ public class CourseInstanceController {
 		return courseInstanceDtoList;
 		
 	}
+	
+	@PostMapping("/courseInstance/delete/{id}")
+	public @ResponseBody CourseInstanceDto deleteCourseInstance(@PathVariable Integer id)
+	{
+		CourseInstance courseInstance = courseInstanceService.deleteCourseInstance(id);
+		
+		//Convert the CourseInstance entity to CourseInstanceDto 
+		CourseInstanceDto courseInstanceDto = CourseInstanceBuilder.convert(courseInstance);
+		
+		return courseInstanceDto;
+		
+	}
+	
+	@GetMapping("/courseInstance/course/{courseId}")
+	public @ResponseBody Iterable<CourseInstanceDto> listCourseInstancesOfCourse(@PathVariable Integer courseId)
+	{
+		Iterable<CourseInstance> courseInstanceList = courseInstanceService.findCourseInstancesOfCourse(courseId);
+		
+		Iterable<CourseInstanceDto> dtoList = CourseInstanceBuilder.convert(courseInstanceList);
+		
+		return dtoList;
+	}
 }

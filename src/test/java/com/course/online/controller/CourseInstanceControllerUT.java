@@ -88,7 +88,19 @@ public class CourseInstanceControllerUT {
 				"[{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\",\"courseId\":null},{\"id\":2,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Terminated\",\"courseId\":null}]",
 				result.getResponse().getContentAsString());
 	}
-
+	
+	@Test
+	public void testDeleteCourseInstanceMethodUpdatesStatusToTerminatedAndReturnsJsonValue() throws Exception
+	{
+		when(courseInstanceService.deleteCourseInstance(Mockito.anyInt())).thenReturn(getCourseInstanceObject());
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/courseInstance/delete/1");
+		
+		MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
+		
+		assertEquals("{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":{\"id\":1,\"name\":\"Java\",\"language\":\"English\",\"ratings\":0,\"member\":null,\"status\":null,\"createdOn\":null},\"createdOn\":null,\"status\":\"Active\",\"courseId\":null}", mvcResult.getResponse().getContentAsString());
+	}
+	
 	private Iterable<CourseInstance> getListOfCourseInstnce() {
 
 		List<CourseInstance> courseInstanceList = new ArrayList<CourseInstance>();
