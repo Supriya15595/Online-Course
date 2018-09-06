@@ -49,7 +49,19 @@ public class MemberController {
 	@GetMapping("/member/list")
 	public @ResponseBody List<MemberDto> listOfMembers()
 	{
-		List<MemberDto> memberDtoList = MemberBuilder.convert(memberService.findAllMembers());
+		List<MemberDto> memberDtoList = MemberBuilder.convert(memberService.listOfMembers());
 		return memberDtoList;
+	}
+	
+	@PostMapping("/member/updadePassword/{id}/{currentPassword}/{newPassword}")
+	public @ResponseBody MemberDto updatePassword(@PathVariable Integer id,@PathVariable String currentPassword,@PathVariable String newPassword)
+	{
+		Member member = memberService.updatePassword(id, currentPassword, newPassword);
+		
+		//Convert the Member Entity into MemberDto
+		MemberDto memberDto = MemberBuilder.convert(member);
+		
+		return memberDto;
+		
 	}
 }

@@ -13,6 +13,8 @@ public interface MemberService {
 
 	public Member deleteMember(int id);
 	
-	public Iterable<Member> findAllMembers();
+	public Iterable<Member> listOfMembers();
+
+	public Member updatePassword(int id, String currentPassword,String newPassword);
 	
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.course.online.dao.MemberDao;
 import com.course.online.model.Member;
 import com.course.online.util.MemberStatus;
+import com.course.online.util.PasswordIncorrectException;
 
 @Component
 public class MemberServiceImpl implements MemberService {
@@ -37,17 +38,39 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member deleteMember(int id) {
 		
-		Member member = findMember(id);
+//		Member member = findMember(id);
 		
-		memberDao.delete(member);
+		Member member = memberDao.findById(id).get();
+		
+		member.setStatus(MemberStatus.Inactive);
+		
+		memberDao.save(member);
 		
 		return member;
 	}
 
 	@Override
-	public Iterable<Member> findAllMembers() {
+	public Iterable<Member> listOfMembers() {
 		
-		return memberDao.findAll();
+		Iterable<Member> memberList =  memberDao.findAll();
+		return memberList;
+	}
+
+	@Override
+	public Member updatePassword(int id, String currentPassword,String newPassword) {
+
+		Member member = memberDao.findById(id).get();
+		
+		if(currentPassword.equals(member.getPassword()))
+		{
+			member.setPassword(newPassword);
+			memberDao.save(member);
+		}
+		else {
+			throw new PasswordIncorrectException();
+		}
+		
+		return member;
 	}
 	
 	

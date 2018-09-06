@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.course.online.model.Member;
 import com.course.online.service.MemberService;
+import com.course.online.util.MemberStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,13 +35,6 @@ public class MemberControllerUT {
 	@MockBean
 	MemberService memberService;
 	
-	private Member getAddedMember() {
-		Member member = new Member();
-		member.setId(100);
-		member.setUserName("aaa1@gmail");
-		member.setPassword("letmein1");
-		return member;
-	}
 
 	@Test
 	public void testAddMemberMethodReturnsJsonObject() throws Exception {
@@ -72,12 +66,32 @@ public class MemberControllerUT {
 	}
 	
 	@Test
-	public void testListOfMembersWillReturnMultipleJsonObject() throws Exception
+	public void testListOfMembersWillReturnMultipleJsonValue() throws Exception
 	{
-		when(memberService.findAllMembers()).thenReturn(getListofMembers());
+		when(memberService.listOfMembers()).thenReturn(getListofMembers());
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/member/list");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals("[{\"id\":1,\"userName\":\"aaa@gmail\",\"password\":\"aaa123\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null},{\"id\":2,\"userName\":\"xxx@gmail\",\"password\":\"xxx123\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null}]", result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void testUpdatePasswordMethodWillReturnJsonValue() throws Exception
+	{
+		when(memberService.updatePassword(Mockito.anyInt(), Mockito.anyString(), Mockito.anyString())).thenReturn(getAddedMember());
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/member/updadePassword/1/abc/123");
+		
+		MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
+		
+		assertEquals("{\"id\":100,\"userName\":\"aaa1@gmail\",\"password\":\"letmein1\",\"email\":null,\"type\":null,\"createdOn\":null,\"status\":null}", mvcResult.getResponse().getContentAsString());
+	}
+	
+	private Member getAddedMember() {
+		Member member = new Member();
+		member.setId(100);
+		member.setUserName("aaa1@gmail");
+		member.setPassword("letmein1");
+		return member;
 	}
 
 	private Iterable<Member> getListofMembers() {
