@@ -17,12 +17,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.course.online.dao.EnrollmentDao;
+import com.course.online.model.CourseInstance;
 import com.course.online.model.Enrollment;
 import com.course.online.model.Member;
+import com.course.online.util.CourseInstanceNotActiveException;
+import com.course.online.util.CourseInstanceStatus;
 
 @RunWith(SpringRunner.class)
 public class EnrollmentServiceUT {
-	
+
 	@TestConfiguration
 	static class DefaultEnrollmentServiceTestContextConfiguration {
 
@@ -34,48 +37,45 @@ public class EnrollmentServiceUT {
 
 	@Autowired
 	private EnrollmentService enrollmentService;
-	
+
 	@MockBean
 	private EnrollmentDao enrollmentDao;
-	
+
 	@Test
 	public void testAddEnrollmentMethodWillReturnAddedEnrollmentObject() {
 		when(enrollmentDao.save(Mockito.any())).thenReturn(getEnrollmentObject());
-		
+
 		Enrollment enrolledMember = enrollmentService.enrollMember(getEnrollmentObject());
-		
+
 		assertNotNull(enrolledMember.getId());
 	}
-	
+
 	@Test
-	public void testFindEnrolledMemberMethodWillReturnEnrollmentObject()
-	{
+	public void testFindEnrolledMemberMethodWillReturnEnrollmentObject() {
 		when(enrollmentDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getEnrollmentObject()));
-		
+
 		Enrollment enrollment = enrollmentService.findEnrolledMember(Mockito.anyInt());
-		
+
 		assertNotNull(enrollment.getId());
 	}
-	
+
 	@Test
-	public void testListOfEnrolledMembersMethodWillReturnEnrolledMembersList()
-	{
+	public void testListOfEnrolledMembersMethodWillReturnEnrolledMembersList() {
 		when(enrollmentDao.findAll()).thenReturn(getListOfEnrolledMembers());
-		
+
 		Iterable<Enrollment> enrollmentList = enrollmentService.listOfEnrolledMembers();
-		
+
 		for (Enrollment enrollment : enrollmentList) {
 			assertNotNull(enrollment.getId());
 		}
 	}
-	
+
 	@Test
-	public void testFindEnrolledMemberByMemberIdWillReturnMultipleJsonValue()
-	{
+	public void testFindEnrolledMemberByMemberIdWillReturnMultipleJsonValue() {
 		when(enrollmentDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getEnrollmentObject()));
-		
+
 		Iterable<Enrollment> enrollmentList = enrollmentService.findEnrolledMemberByMemberId(Mockito.anyInt());
-		
+
 		for (Enrollment enrollment : enrollmentList) {
 			assertNotNull(enrollment.getId());
 		}
@@ -84,39 +84,40 @@ public class EnrollmentServiceUT {
 	private Iterable<Enrollment> getListOfEnrolledMembers() {
 
 		List<Enrollment> enrollmentList = new ArrayList<Enrollment>();
-		
+
 		Enrollment enrollment1 = new Enrollment();
 		enrollment1.setId(1);
 		enrollment1.setMember(getMemberObject());
-		
+
 		Enrollment enrollment2 = new Enrollment();
 		enrollment2.setId(1);
 		enrollment2.setMember(getMemberObject());
-		
+
 		enrollmentList.add(enrollment1);
 		enrollmentList.add(enrollment2);
-		
+
 		return enrollmentList;
 	}
 
 	private Member getMemberObject() {
-		
+
 		Member member = new Member();
 		member.setUserName("Ganga");
 		member.setPassword("1234");
 		member.setType("student");
-		
+
 		return member;
 	}
 
+
 	private Enrollment getEnrollmentObject() {
-		
+
 		Enrollment enrollment = new Enrollment();
-		
+
 		enrollment.setId(1);
-		
+
 		enrollment.setMember(getMemberObject());
-		
+
 		return enrollment;
 	}
 
