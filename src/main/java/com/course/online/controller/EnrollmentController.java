@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.course.online.dto.EnrollmentDto;
+import com.course.online.exception.CourseInstanceNotActiveException;
 import com.course.online.model.CourseInstance;
 import com.course.online.model.Enrollment;
 import com.course.online.model.Member;
 import com.course.online.service.CourseInstanceService;
 import com.course.online.service.EnrollmentService;
 import com.course.online.service.MemberService;
-import com.course.online.util.CourseInstanceNotActiveException;
 import com.course.online.util.EnrollmentBuilder;
 
 @Controller
@@ -58,7 +58,7 @@ public class EnrollmentController {
 			// Convert the Enrollment to EnrollmentDto entity
 			enrollmentDto = EnrollmentBuilder.convert(enrollment);
 		}else {
-			throw new CourseInstanceNotActiveException();
+			throw new CourseInstanceNotActiveException("This Course Instance is Terminate");
 		}
 		
 		return enrollmentDto;

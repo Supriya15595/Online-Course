@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.course.online.exception.CourseInstanceNotActiveException;
 import com.course.online.model.CourseInstance;
 import com.course.online.model.Enrollment;
 import com.course.online.model.Member;
@@ -62,9 +63,10 @@ public class EnrollmentControllerUT {
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
-		assertEquals("{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}", result.getResponse().getContentAsString());
 	}
 
+	
 	@Test
 	public void testFindEnrolledMemberByIdWillReturnJsonValue() throws Exception {
 		when(enrollmentService.findEnrolledMember(Mockito.anyInt())).thenReturn(getEnrolledObject());
@@ -72,7 +74,7 @@ public class EnrollmentControllerUT {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/1");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals(
-				"{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}",
+				"{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}",
 				result.getResponse().getContentAsString());
 	}
 
@@ -123,11 +125,12 @@ public class EnrollmentControllerUT {
 
 		return courseInstance;
 	}
-
+	
 	private Enrollment getEnrolledObject() {
 		Enrollment enrollment = new Enrollment();
 		enrollment.setId(1);
 		enrollment.setMember(getMemberObject());
+		enrollment.setCourseInstance(getCourseInstanceObject());
 
 		return enrollment;
 	}

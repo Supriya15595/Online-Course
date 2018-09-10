@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.course.online.dao.MemberDao;
+import com.course.online.exception.PasswordIncorrectException;
 import com.course.online.model.Member;
 import com.course.online.util.MemberStatus;
-import com.course.online.util.PasswordIncorrectException;
 
 @Component
 public class MemberServiceImpl implements MemberService {
@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
 			memberDao.save(member);
 		}
 		else {
-			throw new PasswordIncorrectException();
+			throw new PasswordIncorrectException("Password Mismatch");
 		}
 		
 		return member;

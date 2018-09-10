@@ -1,15 +1,17 @@
 package com.course.online.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.course.online.dto.MemberDto;
 import com.course.online.model.Member;
@@ -23,11 +25,15 @@ public class MemberController {
 	MemberService memberService;
 	
 	@PostMapping("/member")
-	public @ResponseBody MemberDto addMember(@RequestBody MemberDto memberDto)
+	public  ResponseEntity<Object> addMember(@RequestBody MemberDto memberDto)
 	{
 		Member member = MemberBuilder.convert(memberDto);
 		member=memberService.addMember(member);
-		return MemberBuilder.convert(member);
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(member.getId()).toUri();
+		
+		return ResponseEntity.created(location).build();
+//		return MemberBuilder.convert(member);
 	}
 	
 	@PostMapping("/member/delete/{id}")
@@ -39,7 +45,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/member/{id}")
-	public @ResponseBody MemberDto findMember(@PathVariable int id)
+	public @ResponseBody MemberDto findMember(@PathVariable Integer id)
 	{
 		Member member = memberService.findMember(id);
 		MemberDto memeberDto = MemberBuilder.convert(member);

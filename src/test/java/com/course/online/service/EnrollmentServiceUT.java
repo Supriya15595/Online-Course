@@ -17,10 +17,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.course.online.dao.EnrollmentDao;
+import com.course.online.exception.CourseInstanceNotActiveException;
 import com.course.online.model.CourseInstance;
 import com.course.online.model.Enrollment;
 import com.course.online.model.Member;
-import com.course.online.util.CourseInstanceNotActiveException;
 import com.course.online.util.CourseInstanceStatus;
 
 @RunWith(SpringRunner.class)

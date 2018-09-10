@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.course.online.dto.CourseDto;
+import com.course.online.exception.MemberInactiveException;
 import com.course.online.model.Course;
 import com.course.online.model.Member;
 import com.course.online.service.CourseService;
@@ -32,10 +33,17 @@ public class CourseController {
 		// Adding the member to course
 		Integer memberId = courseDto.getMemberId();
 		Member member = memberService.findMember(memberId);
+		
+		if(member.getStatus().toString().equals("Active"))
+		{
 		course.setMember(member);
 
 		// Saving the course object
 		course = courseService.addCourse(course);
+		}else
+		{
+			throw new MemberInactiveException("Member should be Active to create course");
+		}
 
 		// Converting the Course Entity to CourseDto and returning the value
 		courseDto = CourseBuilder.convert(course);

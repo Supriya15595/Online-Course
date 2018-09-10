@@ -18,9 +18,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.course.online.dao.MemberDao;
+import com.course.online.exception.PasswordIncorrectException;
 import com.course.online.model.Member;
 import com.course.online.util.MemberStatus;
-import com.course.online.util.PasswordIncorrectException;
 
 @RunWith(SpringRunner.class)
 public class MemberServiceUT {
