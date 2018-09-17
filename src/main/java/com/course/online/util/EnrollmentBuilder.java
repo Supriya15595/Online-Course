@@ -6,9 +6,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 
 import com.course.online.dto.EnrollmentDto;
-import com.course.online.dto.MemberDto;
 import com.course.online.model.Enrollment;
-import com.course.online.model.Member;
 
 
 public class EnrollmentBuilder {

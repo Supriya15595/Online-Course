@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.course.online.dto.CourseInstanceDto;
+import com.course.online.exception.CourseInactiveException;
 import com.course.online.model.Course;
 import com.course.online.model.CourseInstance;
 import com.course.online.service.CourseInstanceService;
@@ -35,9 +36,15 @@ public class CourseInstanceController {
 		//Converting the CourseInstanceDto to CourseInstance Entity
 		CourseInstance courseInstance = CourseInstanceBuilder.convert(courseInstanceDto);
 		
-		courseInstance.setCourse(course);
+		if(course.getStatus().toString().equals("Active"))
+		{
+		
+			courseInstance.setCourse(course);
 			
-		courseInstance = courseInstanceService.addCourseInstance(courseInstance);
+			courseInstance = courseInstanceService.addCourseInstance(courseInstance);
+		}else {
+			throw new CourseInactiveException("Can create Course Instance only if Course is Active");
+		}
 		
 		//Convert courseInstance Entity returned after performing insert into courseInstanceDto before returning
 		courseInstanceDto =  CourseInstanceBuilder.convert(courseInstance);

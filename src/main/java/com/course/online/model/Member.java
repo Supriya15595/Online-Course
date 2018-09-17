@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import com.course.online.util.MemberStatus;
 
 @Entity
@@ -20,27 +18,27 @@ import com.course.online.util.MemberStatus;
 public class Member {
 
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name="username")
+	@Column(name = "username")
 	private String userName;
 
-	@Column(name="password")
+	@Column(name = "password")
 	private String password;
 
-	@Column(name="email")
+	@Column(name = "email")
 	private String email;
 
-	@Column(name="type")
+	@Column(name = "type")
 	private String type;
 
-	@Column(name="createdon")
+	@Column(name = "createdon")
 	private Date createdOn;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="status")
+	@Column(name = "status")
 	private MemberStatus status;
 
 	public Date getCreatedOn() {

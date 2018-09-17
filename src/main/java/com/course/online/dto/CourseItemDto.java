@@ -13,6 +13,7 @@ public class CourseItemDto {
 	private String content;
 	private Course course;
 	private Date createdOn;
+	
 	private Integer courseId;
 
 	public Integer getCourseId() {

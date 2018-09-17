@@ -13,31 +13,31 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name=" courseitem")
+@Table(name = " courseitem")
 public class CourseItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
 
-	@Column(name="name")
+	@Column(name = "name")
 	private String name;
 
-	@Column(name="description")
+	@Column(name = "description")
 	private String description;
 
-	@Column(name="type")
+	@Column(name = "type")
 	private String type;
 
-	@Column(name="content")
+	@Column(name = "content")
 	private String content;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "courseid")
 	private Course course;
 
-	@Column(name="createdon")
+	@Column(name = "createdon")
 	private Date createdOn;
 
 	public Integer getId() {

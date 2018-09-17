@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.course.online.AppContext;
 import com.course.online.dto.CourseDto;
 import com.course.online.exception.MemberInactiveException;
 import com.course.online.model.Course;
@@ -31,18 +32,16 @@ public class CourseController {
 		Course course = CourseBuilder.convert(courseDto);
 
 		// Adding the member to course
-		Integer memberId = courseDto.getMemberId();
-		Member member = memberService.findMember(memberId);
 		
-		if(member.getStatus().toString().equals("Active"))
-		{
-		course.setMember(member);
+		Member member = AppContext.getMember();
 
-		// Saving the course object
-		course = courseService.addCourse(course);
-		}else
-		{
-			throw new MemberInactiveException("Member should be Active to create course");
+		if (member.getStatus().toString().equals("Active") && member.getType().equals("tutor")) {
+			course.setMember(member);
+
+			// Saving the course object
+			course = courseService.addCourse(course);
+		} else {
+			throw new MemberInactiveException("Member is not a tutor or is inactive");
 		}
 
 		// Converting the Course Entity to CourseDto and returning the value
@@ -53,48 +52,45 @@ public class CourseController {
 
 	@GetMapping("/course/{id}")
 	public @ResponseBody CourseDto findCourseById(@PathVariable int id) {
-		
+
 		// Searching for course by id
 		Course course = courseService.findCourseById(id);
-		
+
 		// Converting the returned course object to courseDto
 		CourseDto courseDto = CourseBuilder.convert(course);
 
 		return courseDto;
 
 	}
-	
+
 	@GetMapping("/course/list")
 	public @ResponseBody Iterable<CourseDto> listOfCourse() {
-		
-		//Getting all courses from dao
+
+		// Getting all courses from dao
 		Iterable<Course> listOfCourses = courseService.findAllCourses();
-		
-		//Converting list of courses to list of courseDto
+
+		// Converting list of courses to list of courseDto
 		Iterable<CourseDto> listOfCourseDto = CourseBuilder.convert(listOfCourses);
-		
+
 		return listOfCourseDto;
 	}
-	
+
 	@PostMapping("/course/delete/{id}")
-	public @ResponseBody CourseDto deleteCourse(@PathVariable Integer id)
-	{
+	public @ResponseBody CourseDto deleteCourse(@PathVariable Integer id) {
 		Course course = courseService.deleteCourse(id);
-		
+
 		CourseDto courseDto = CourseBuilder.convert(course);
-		
+
 		return courseDto;
 	}
-	
+
 	@PostMapping("/course/update/{id}")
-	public @ResponseBody CourseDto updateStatusToActive(@PathVariable Integer id)
-	{
+	public @ResponseBody CourseDto updateStatusToActive(@PathVariable Integer id) {
 		Course course = courseService.updateStatusToActive(id);
-		
+
 		CourseDto courseDto = CourseBuilder.convert(course);
-		
+
 		return courseDto;
 	}
-	
-	
+
 }

@@ -1,17 +1,14 @@
 package com.course.online.exception;
 
-public class PasswordIncorrectException extends RuntimeException {
+public class AuthenticationInvalidException extends RuntimeException{
 
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public PasswordIncorrectException(String message) {
+	public AuthenticationInvalidException(String message) {
 		super(message);
 	}
-
-
 
 }

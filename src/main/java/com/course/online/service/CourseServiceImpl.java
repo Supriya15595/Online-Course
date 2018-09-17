@@ -17,13 +17,13 @@ public class CourseServiceImpl implements CourseService {
 
 	@Autowired
 	private CourseDao courseDao;
-	
+
 	@Autowired
 	private CourseInstanceService courseInstanceService;
-	
+
 	@Autowired
 	private CourseInstanceDao courseInstanceDao;
-	
+
 	@Override
 	public Course addCourse(Course course) {
 		Date currentDate = new Date();
@@ -41,7 +41,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public Iterable<Course> findAllCourses() {
-		
+
 		Iterable<Course> listOfCourse = courseDao.findAll();
 		return listOfCourse;
 	}
@@ -50,32 +50,32 @@ public class CourseServiceImpl implements CourseService {
 	public Course deleteCourse(Integer id) {
 
 		Course course = courseDao.findById(id).get();
-		
+
 		Iterable<CourseInstance> courseInstanceList = courseInstanceService.findCourseInstancesOfCourse(id);
-		
+
 		course.setStatus(CourseStatus.Terminated);
-		
+
 		for (CourseInstance courseInstance : courseInstanceList) {
 			courseInstance.setStatus(CourseInstanceStatus.Terminated);
 			courseInstanceDao.save(courseInstance);
 		}
-		
+
 		courseDao.save(course);
-		
+
 		return course;
 	}
 
 	@Override
 	public Course updateStatusToActive(Integer id) {
-		
+
 		Course course = courseDao.findById(id).get();
-		
+
 		course.setStatus(CourseStatus.Active);
-		
+
 		courseDao.save(course);
-		
+
 		return course;
 	}
-	
-	
+
 }
+	

@@ -1,6 +1,6 @@
 package com.course.online.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,25 +12,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.stereotype.Component;
+
+@Component
 @Entity
-@Table(name = "enrollment")
-public class Enrollment {
+@Table(name = "login_credentials")
+public class Login {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "memberid")
+	@JoinColumn(name = " memberid")
 	private Member member;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "instanceid")
-	private CourseInstance courseInstance;
+	@Column(name = "token")
+	private String token;
 
-	@Column(name = "createdon")
-	private Date createdOn;
+	@Column(name = "expiry_date")
+	private LocalDate expireDate;
 
 	public Integer getId() {
 		return id;
@@ -48,19 +50,20 @@ public class Enrollment {
 		this.member = member;
 	}
 
-	public CourseInstance getCourseInstance() {
-		return courseInstance;
+	public String getToken() {
+		return token;
 	}
 
-	public void setCourseInstance(CourseInstance courseInstance) {
-		this.courseInstance = courseInstance;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
-	public Date getCreatedOn() {
-		return createdOn;
+	public LocalDate getExpireDate() {
+		return expireDate;
 	}
 
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
+	public void setExpireDate(LocalDate expireDate) {
+		this.expireDate = expireDate;
 	}
+
 }

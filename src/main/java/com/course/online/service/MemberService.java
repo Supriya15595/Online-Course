@@ -2,6 +2,7 @@ package com.course.online.service;
 
 import org.springframework.stereotype.Component;
 
+import com.course.online.model.Login;
 import com.course.online.model.Member;
 
 @Component
@@ -15,6 +16,10 @@ public interface MemberService {
 	
 	public Iterable<Member> listOfMembers();
 
-	public Member updatePassword(int id, String currentPassword,String newPassword);
+	public Member updatePassword(String email, String currentPassword,String newPassword);
+	
+	public Login login(String email,String password);
+	
+	public Login findByToken(String token);
 	
 }

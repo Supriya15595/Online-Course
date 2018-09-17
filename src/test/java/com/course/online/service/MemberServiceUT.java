@@ -17,9 +17,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.course.online.dao.LoginDao;
 import com.course.online.dao.MemberDao;
+import com.course.online.exception.InvalidCredentialsException;
 import com.course.online.exception.PasswordIncorrectException;
+import com.course.online.model.Login;
 import com.course.online.model.Member;
+import com.course.online.util.HashPassword;
 import com.course.online.util.MemberStatus;
 
 @RunWith(SpringRunner.class)
@@ -27,6 +31,9 @@ public class MemberServiceUT {
 
 	@MockBean
 	MemberDao memberDao;
+	
+	@MockBean
+	LoginDao loginDao;
 
 	@TestConfiguration
 	static class DefaultMemberServiceTestContextConfiguration {
@@ -35,10 +42,19 @@ public class MemberServiceUT {
 		public MemberService memberService() {
 			return new MemberServiceImpl();
 		}
+		
+		@Bean
+		public Login login()
+		{
+			return new Login();
+		}
 	}
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private Login login;
 
 	@Test
 	public void testAddMemberMethodWillReturnJsonValue() {
@@ -82,23 +98,51 @@ public class MemberServiceUT {
 	@Test
 	public void testUpdatePasswordMethodWithCorrectPasswordWillReturnJasonValueWithUpdatedPassword()
 	{
-		when(memberDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getMemberObject()));
+		when(memberDao.findByEmail(Mockito.anyString())).thenReturn(getMemberObject());
 		
-		Member member = memberService.updatePassword(Mockito.anyInt(), "abc123", "xyzz");
+		Member member = memberService.updatePassword(Mockito.anyString(),"abc123", "xyzz");
 		
-		assertEquals("xyzz",member.getPassword());
+		assertEquals("9d240bb2341a40d2735c05211310",member.getPassword());
 	}
 	
 	@Test(expected=PasswordIncorrectException.class)
 	public void testUpdatePasswordMethodWithIncorrectPasswordWillThrowPasswordIncorrectException()
 	{
-		when(memberDao.findById(Mockito.anyInt())).thenReturn(Optional.of(getMemberObject()));
+		when(memberDao.findByEmail(Mockito.anyString())).thenReturn(getMemberObject());
 		
-		Member member = memberService.updatePassword(Mockito.anyInt(), "abc", "xyzz");
+		Member member = memberService.updatePassword(Mockito.anyString(), "abc", "xyzz");
 		
 	}
 	
+	@Test
+	public void testloginMethodWillReturnJsonValue()
+	{
+		when(memberDao.findByEmail(Mockito.anyString())).thenReturn(getMemberObject());
+		
+		when(loginDao.save(Mockito.any())).thenReturn(getLoginObject());
+		
+		Login login = memberService.login("abc", "abc123");
+		
+		assertNotNull(login.getId());
+	}
 	
+	@Test(expected=InvalidCredentialsException.class)
+	public void testLoginMethodWithInvalidCredentialsWillThrowException()
+	{
+		when(memberDao.findByEmail(Mockito.anyString())).thenReturn(getMemberObject());
+		
+		when(loginDao.save(Mockito.any())).thenReturn(getLoginObject());
+		
+		memberService.login("abc@gmail.com", "abc1");
+	}
+	
+	private Login getLoginObject() {
+				
+		login.setId(1);
+		login.setMember(getMemberObject());
+		return null;
+	}
+
 	private Iterable<Member> getListOfMembers() {
 
 		List<Member> memberlist = new ArrayList<Member>();
@@ -125,7 +169,7 @@ public class MemberServiceUT {
 		Member member = new Member();
 		member.setId(10);
 		member.setUserName("abc");
-		member.setPassword("abc123");
+		member.setPassword(HashPassword.hash("abc123"));
 		member.setEmail("abc@gmail.com");
 		member.setStatus(MemberStatus.Active);
 		return member;

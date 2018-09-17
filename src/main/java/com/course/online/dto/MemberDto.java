@@ -2,14 +2,23 @@ package com.course.online.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.course.online.util.MemberStatus;
 
 public class MemberDto {
 
 	private Integer id;
+	
+	@NotNull
 	private String userName;
+	
+	@NotNull
 	private String password;
+	
+	@NotNull
 	private String email;
+	
 	private String type;
 	private Date createdOn;
 	private MemberStatus status;

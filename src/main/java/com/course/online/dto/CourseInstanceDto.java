@@ -13,6 +13,7 @@ public class CourseInstanceDto {
 	private Course course;
 	private Date createdOn;
 	private CourseInstanceStatus status;
+	
 	private Integer courseId;
 
 	public Integer getCourseId() {

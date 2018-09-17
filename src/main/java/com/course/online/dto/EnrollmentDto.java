@@ -11,7 +11,8 @@ public class EnrollmentDto {
 	private Member member;
 	private CourseInstance courseInstance;
 	private Date createdOn;
-	private Integer memberId;
+	
+	
 	private Integer courseInstanceId;
 
 	public Integer getId() {
@@ -44,14 +45,6 @@ public class EnrollmentDto {
 
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
-	}
-
-	public Integer getMemberId() {
-		return memberId;
-	}
-
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
 	}
 
 	public Integer getCourseInstanceId() {

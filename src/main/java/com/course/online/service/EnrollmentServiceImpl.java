@@ -18,14 +18,14 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	public Enrollment enrollMember(Enrollment enrollment) {
 		Date currentDate = new Date();
 		enrollment.setCreatedOn(currentDate);
-		
+
 		enrollment = enrollmentDao.save(enrollment);
 		return enrollment;
 	}
 
 	@Override
 	public Enrollment findEnrolledMember(Integer id) {
-		
+
 		Enrollment enrollment = enrollmentDao.findById(id).get();
 		return enrollment;
 	}

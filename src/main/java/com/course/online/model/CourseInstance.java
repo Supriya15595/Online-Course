@@ -16,31 +16,30 @@ import javax.persistence.Table;
 
 import com.course.online.util.CourseInstanceStatus;
 
-
 @Entity
-@Table(name="courseinstance")
+@Table(name = "courseinstance")
 public class CourseInstance {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Integer id;
 
-	@Column(name="startdate")
+	@Column(name = "startdate")
 	private Date startdate;
 
-	@Column(name="enddate")
+	@Column(name = "enddate")
 	private Date endDate;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "courseid")
 	private Course course;
 
-	@Column(name="createdon")
+	@Column(name = "createdon")
 	private Date createdOn;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="STATUS")
+	@Column(name = "STATUS")
 	private CourseInstanceStatus status;
 
 	public Integer getId() {

@@ -16,36 +16,34 @@ import javax.persistence.Table;
 
 import com.course.online.util.CourseStatus;
 
-
 @Entity
 @Table
 public class Course {
 
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name="NAME")
+	@Column(name = "NAME")
 	private String name;
 
-	@Column(name="language")
+	@Column(name = "language")
 	private String language;
 
-	@Column(name="ratings")
+	@Column(name = "ratings")
 	private int ratings;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = " MEMBERID")
 	private Member member;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="STATUS")
+	@Column(name = "STATUS")
 	private CourseStatus status;
 
-	@Column(name="createdon")
+	@Column(name = "createdon")
 	private Date createdOn;
-	
 
 	public CourseStatus getStatus() {
 		return status;

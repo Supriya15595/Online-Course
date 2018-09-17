@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 
-import com.course.online.dto.CourseDto;
 import com.course.online.dto.CourseItemDto;
-import com.course.online.model.Course;
 import com.course.online.model.CourseItem;
 
 

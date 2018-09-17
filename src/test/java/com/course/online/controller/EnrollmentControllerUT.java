@@ -23,11 +23,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.course.online.exception.CourseInstanceNotActiveException;
 import com.course.online.model.CourseInstance;
 import com.course.online.model.Enrollment;
+import com.course.online.model.Login;
 import com.course.online.model.Member;
 import com.course.online.service.CourseInstanceService;
 import com.course.online.service.EnrollmentService;
 import com.course.online.service.MemberService;
 import com.course.online.util.CourseInstanceStatus;
+import com.course.online.util.MemberStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,13 +50,16 @@ public class EnrollmentControllerUT {
 
 	@Test
 	public void testEnrollMemberMethodWillReturnJsonValue() throws Exception {
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(memberService.findMember(Mockito.anyInt())).thenReturn(getMemberObject());
 
 		when(courseInstanceService.findCourseInstanceById(Mockito.anyInt())).thenReturn(getCourseInstanceObject());
 
 		when(enrollmentService.enrollMember(Mockito.any())).thenReturn(getEnrolledObject());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/enrollment").accept(MediaType.APPLICATION_JSON)
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/enrollment").header("auth-token", "21i1j217as")
+				.accept(MediaType.APPLICATION_JSON)
 				.content("{\n" + "\t\"id\":\"1\",\n" +
 						"\t\"memberId\":\"1\",\n" + 
 						"\t\"courseInstanceId\":\"1\"\n" +
@@ -63,41 +68,68 @@ public class EnrollmentControllerUT {
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
-		assertEquals("{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}", result.getResponse().getContentAsString());
+		assertEquals("{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":\"Active\"},\"courseInstance\":{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}", result.getResponse().getContentAsString());
 	}
 
-	
+
+
 	@Test
 	public void testFindEnrolledMemberByIdWillReturnJsonValue() throws Exception {
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(enrollmentService.findEnrolledMember(Mockito.anyInt())).thenReturn(getEnrolledObject());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/1");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/1").header("auth-token", "21i1j217as");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		assertEquals(
-				"{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}",
+				"{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":\"Active\"},\"courseInstance\":{\"id\":1,\"startdate\":null,\"endDate\":null,\"course\":null,\"createdOn\":null,\"status\":\"Active\"},\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}",
 				result.getResponse().getContentAsString());
 	}
 
 	@Test
 	public void testListOfEnrolledMembersWillReturnMultipleJsonValues() throws Exception {
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(enrollmentService.listOfEnrolledMembers()).thenReturn(getListOfEnrolledMembers());
 		
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/list");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/list").header("auth-token", "21i1j217as");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		
-		assertEquals("[{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null},{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}]", result.getResponse().getContentAsString());
+		assertEquals("[{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":\"Active\"},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null},{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":\"Active\"},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}]", result.getResponse().getContentAsString());
 	}
 	
 	@Test
 	public void testFindEnrolledMemberByMemberIdWillReturnMultipleJsonValue() throws Exception
 	{
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(enrollmentService.findEnrolledMemberByMemberId(Mockito.anyInt())).thenReturn(getListOfEnrolledMembers());
 		
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/member/1");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/enrollment/member/1").header("auth-token", "21i1j217as");
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		
-		assertEquals("[{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null},{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":null},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}]", result.getResponse().getContentAsString());
+		assertEquals("[{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":\"Active\"},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null},{\"id\":1,\"member\":{\"id\":1,\"userName\":\"Ganga\",\"password\":\"1234\",\"email\":null,\"type\":\"student\",\"createdOn\":null,\"status\":\"Active\"},\"courseInstance\":null,\"createdOn\":null,\"memberId\":null,\"courseInstanceId\":null}]", result.getResponse().getContentAsString());
 	}
+	
+	private Login getLoginObject() {
+		Login login = new Login();
+
+		login.setId(1);
+		login.setToken("21i1j217as");
+		login.setMember(getAddedMember());
+
+		return login;
+	}
+
+	private Member getAddedMember() {
+		Member member = new Member();
+		member.setId(100);
+		member.setUserName("aaa1@gmail");
+		member.setPassword("letmein1");
+		return member;
+	}
+
+
 
 	private Iterable<Enrollment> getListOfEnrolledMembers() {
 		List<Enrollment> enrollmentList = new ArrayList<Enrollment>();
@@ -141,6 +173,7 @@ public class EnrollmentControllerUT {
 		member.setUserName("Ganga");
 		member.setPassword("1234");
 		member.setType("student");
+		member.setStatus(MemberStatus.Active);
 
 		return member;
 	}

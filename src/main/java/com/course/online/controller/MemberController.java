@@ -1,73 +1,107 @@
 package com.course.online.controller;
 
-import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.course.online.AppContext;
+import com.course.online.dao.LoginDao;
+import com.course.online.dto.LoginCredentialsDto;
+import com.course.online.dto.LoginDto;
+import com.course.online.dto.MemberCredentialsDto;
 import com.course.online.dto.MemberDto;
+import com.course.online.model.Login;
 import com.course.online.model.Member;
 import com.course.online.service.MemberService;
+import com.course.online.util.LoginBuilder;
 import com.course.online.util.MemberBuilder;
 
-@Controller
+@RestController
 public class MemberController {
-	
+
 	@Autowired
-	MemberService memberService;
-	
-	@PostMapping("/member")
-	public  ResponseEntity<Object> addMember(@RequestBody MemberDto memberDto)
-	{
-		Member member = MemberBuilder.convert(memberDto);
-		member=memberService.addMember(member);
-		
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(member.getId()).toUri();
-		
-		return ResponseEntity.created(location).build();
-//		return MemberBuilder.convert(member);
+	private MemberService memberService;
+
+	@Autowired
+	private LoginDao loginDao;
+
+	@PostMapping("/login")
+	public LoginDto login(@Valid @RequestBody LoginCredentialsDto loginCredentials) {
+		String email = loginCredentials.getEmail();
+		String password = loginCredentials.getPassword();
+
+		Login login = memberService.login(email, password);
+
+		LoginDto loginDto = LoginBuilder.convert(login);
+
+		return loginDto;
 	}
-	
-	@PostMapping("/member/delete/{id}")
-	public @ResponseBody MemberDto deleteMember(@PathVariable int id)
-	{
-		Member member =  memberService.deleteMember(id);
+
+	@PostMapping("/member")
+	public @ResponseBody MemberDto addMember(@Valid @RequestBody MemberDto memberDto) {
+		Member member = MemberBuilder.convert(memberDto);
+		member = memberService.addMember(member);
+		/*
+		 * URI location =
+		 * ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand
+		 * (member.getId()).toUri();
+		 * 
+		 * return ResponseEntity.created(location).build();
+		 */
+
+		return MemberBuilder.convert(member);
+	}
+
+	@PostMapping("/member/delete")
+	public @ResponseBody MemberDto deleteMember() {
+
+		Member loggedInMember = AppContext.getMember();
+
+		int id = loggedInMember.getId();
+
+		Member member = memberService.deleteMember(id);
 		MemberDto memberDto = MemberBuilder.convert(member);
 		return memberDto;
 	}
-	
-	@GetMapping("/member/{id}")
-	public @ResponseBody MemberDto findMember(@PathVariable Integer id)
-	{
+
+	@GetMapping("/member")
+	public @ResponseBody MemberDto findMember() {
+
+		Member loggedInMember = AppContext.getMember();
+		int id = loggedInMember.getId();
+		
 		Member member = memberService.findMember(id);
 		MemberDto memeberDto = MemberBuilder.convert(member);
 		return memeberDto;
 	}
-	
+
 	@GetMapping("/member/list")
-	public @ResponseBody List<MemberDto> listOfMembers()
-	{
+	public @ResponseBody List<MemberDto> listOfMembers() {
 		List<MemberDto> memberDtoList = MemberBuilder.convert(memberService.listOfMembers());
 		return memberDtoList;
 	}
-	
-	@PostMapping("/member/updadePassword/{id}/{currentPassword}/{newPassword}")
-	public @ResponseBody MemberDto updatePassword(@PathVariable Integer id,@PathVariable String currentPassword,@PathVariable String newPassword)
-	{
-		Member member = memberService.updatePassword(id, currentPassword, newPassword);
-		
-		//Convert the Member Entity into MemberDto
+
+	@PostMapping("/member/updatePassword")
+	public @ResponseBody MemberDto updatePassword(@RequestBody MemberCredentialsDto memberCredentials) {
+		String email = memberCredentials.getEmail();
+		String currentPassword = memberCredentials.getCurrentPassword();
+		String newPassword = memberCredentials.getNewPassword();
+
+		Member member = memberService.updatePassword(email, currentPassword, newPassword);
+
+		// Convert the Member Entity into MemberDto
 		MemberDto memberDto = MemberBuilder.convert(member);
-		
+
 		return memberDto;
-		
+
 	}
 }

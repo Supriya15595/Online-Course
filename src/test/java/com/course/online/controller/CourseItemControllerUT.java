@@ -22,8 +22,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.course.online.model.Course;
 import com.course.online.model.CourseItem;
+import com.course.online.model.Login;
+import com.course.online.model.Member;
 import com.course.online.service.CourseItemService;
 import com.course.online.service.CourseService;
+import com.course.online.service.MemberService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,17 +41,24 @@ public class CourseItemControllerUT {
 
 	@MockBean
 	private CourseItemService courseItemService;
+	
+	@MockBean
+	private MemberService memberService;
 
 	@Test
 	public void testAddCourseItemMethodWillReturnJsonValue() throws Exception {
-
+		
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		// Test id findCourse is working
 		when(courseService.findCourseById(Mockito.anyInt())).thenReturn(getCourseObject());
 
 		when(courseItemService.addCourseItem(Mockito.any())).thenReturn(getCourseItemObject());
 
 		// Mocking the request
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/courseItem").accept(MediaType.APPLICATION_JSON)
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/courseItem")
+				.header("auth-token", "21i1j217as")
+				.accept(MediaType.APPLICATION_JSON)
 				.content("{\n" + "\t\"id\":\"1\",\n" + "\t\"name\":\"Introduction to Hibernate\",\n"
 						+ "\t\"courseId\":\"1\",\n" + "\t\"type\":\"video\"\n" + "}")
 				.contentType(MediaType.APPLICATION_JSON);
@@ -61,11 +71,16 @@ public class CourseItemControllerUT {
 
 	}
 
+	
+
 	@Test
 	public void testFindCourseItemMethodWillReturnSingleJsonObject() throws Exception {
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(courseItemService.findCourseItem(Mockito.anyInt())).thenReturn(getCourseItemObject());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/1");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/1")
+										.header("auth-token", "21i1j217as");
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
@@ -76,9 +91,12 @@ public class CourseItemControllerUT {
 
 	@Test
 	public void testListOfCourseItemMethodWillReturnMultipleJsonObjects() throws Exception {
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(courseItemService.findAllCourseItems()).thenReturn(getListOfCourseItems());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/list");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/list")
+										.header("auth-token", "21i1j217as");
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 
@@ -89,14 +107,34 @@ public class CourseItemControllerUT {
 
 	@Test
 	public void testListCourseItemsOfCourseMethodWillReturnMultipleJsonValue() throws Exception {
+		when(memberService.findByToken(Mockito.anyString())).thenReturn(getLoginObject());
+		
 		when(courseItemService.listCourseItemsOfCourse(Mockito.anyInt())).thenReturn(getListOfCourseItems());
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/course/1");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/courseItem/course/1").header("auth-token", "21i1j217as");
 
 		MvcResult result = mvc.perform(requestBuilder).andReturn();
 		
 		assertEquals("[{\"id\":1,\"name\":\"Introduction to Java\",\"description\":null,\"type\":\"video\",\"content\":null,\"course\":null,\"createdOn\":null,\"courseId\":null},{\"id\":2,\"name\":\"Introduction to JDBC\",\"description\":null,\"type\":\"pdf\",\"content\":null,\"course\":null,\"createdOn\":null,\"courseId\":null}]", result.getResponse().getContentAsString());
 
+	}
+	
+	private Login getLoginObject() {
+		Login login = new Login();
+
+		login.setId(1);
+		login.setToken("21i1j217as");
+		login.setMember(getAddedMember());
+
+		return login;
+	}
+
+	private Member getAddedMember() {
+		Member member = new Member();
+		member.setId(100);
+		member.setUserName("aaa1@gmail");
+		member.setPassword("letmein1");
+		return member;
 	}
 
 	private Iterable<CourseItem> getListOfCourseItems() {
